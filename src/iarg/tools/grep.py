@@ -1,3 +1,4 @@
+from ast import pattern
 from pathlib import Path
 import re
 from iarg.constants import TEXT_EXTENSIONS
@@ -30,7 +31,10 @@ class GrepTool(Tool):
     def run(self, pattern: str, path="."):
         root = Path(path)
 
-        regex = re.compile(pattern)
+        try:
+            regex = re.compile(pattern)
+        except re.error:
+            regex = re.compile(re.escape(pattern))
 
         results = []
 
