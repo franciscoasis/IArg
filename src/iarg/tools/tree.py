@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 from iarg.constants import TEXT_EXTENSIONS
+from iarg.constants import IGNORE_DIRS
 from .base import Tool
 
 
@@ -23,15 +25,21 @@ class TreeTool(Tool):
 
         lines = []
 
-        for p in sorted(root.rglob("*")):
-            if p.is_file() and p.suffix not in TEXT_EXTENSIONS:
-                continue
-            if "__pycache__" in p.parts:
-                continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [
+                dirname
+                for dirname in dirnames
+                if dirname not in IGNORE_DIRS
+            ]
 
-            if ".git" in p.parts:
-                continue
+            current = Path(dirpath)
 
-            lines.append(str(p.relative_to(root)))
+            for filename in filenames:
+                file_path = current / filename
 
-        return "\n".join(lines)
+                if file_path.suffix not in TEXT_EXTENSIONS:
+                    continue
+
+                lines.append(str(file_path.relative_to(root)))
+
+        return "\n".join(sorted(lines))

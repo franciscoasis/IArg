@@ -4,6 +4,7 @@ from .grep import GrepTool
 from .read_files import ReadFilesTool
 from .find_files import FindFilesTool
 from .glob import GlobTool
+from .edit_file import EditFileTool
 
 class ToolRegistry:
     def __init__(self):
@@ -39,3 +40,4 @@ registry.register(GrepTool())
 registry.register(ReadFilesTool())
 registry.register(FindFilesTool())
 registry.register(GlobTool())
+registry.register(EditFileTool())

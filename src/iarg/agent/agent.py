@@ -1,12 +1,18 @@
-from iarg.commands import CommandHandler
-from iarg.model import OllamaModel
-from iarg.tools import registry
+import json
+
 from iarg.agent.planner import Planner
 from iarg.agent.responder import Responder
+from iarg.commands import CommandHandler
 from iarg.memory import Memory
+from iarg.model import OllamaModel
+from iarg.tools import registry
+from iarg.tools.diff import DiffTool
+from iarg.tools.files import FileTool
+from iarg.utils import clean_code
 
 
 class Agent:
+    MAX_PLANNER_CYCLES = 2
 
     def __init__(self):
         self.model = OllamaModel(
@@ -31,6 +37,26 @@ class Agent:
         return tool.run(**kwargs)
 
 
+    def _read_file(self, path: str):
+        return FileTool.read(path)
+
+
+    def _apply_edit_result(self, result: dict):
+        diff = result.get("diff")
+
+        if diff:
+            print(diff)
+
+        ans = input("\n¿Aplicar cambios? (y/N): ")
+
+        if ans.lower() != "y":
+            return False
+
+        FileTool.write(result["path"], result["content"])
+
+        return True
+
+
     def run(self, prompt: str):
 
         # Guardamos el contexto anterior antes de agregar
@@ -44,44 +70,81 @@ class Agent:
         # Si es un comando interno
         if result is not None:
 
-            self.memory.add(
-                "user",
-                prompt
-            )
-
-            self.memory.add(
-                "assistant",
-                result
-            )
+            self.memory.add_many([
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+                {
+                    "role": "assistant",
+                    "content": result,
+                },
+            ])
 
             return result
 
 
-        # Planificar acción
-        plan = self.planner.plan(prompt)
-
-
         context = []
+        executed = set()
 
 
-        # Ejecutar herramientas
-        for call in plan["steps"]:
-
-            name = call["name"]
-            args = call["arguments"]
-
-
-            result = self.execute_tool(
-                name,
-                **args,
+        # Planificar y ejecutar acciones en ciclos cortos
+        for _ in range(self.MAX_PLANNER_CYCLES):
+            plan = self.planner.plan(
+                prompt,
+                history=history,
+                context=context,
             )
 
+            steps = plan.get("steps", [])
 
-            context.append({
-                "tool": name,
-                "arguments": args,
-                "result": result,
-            })
+            if not steps:
+                break
+
+            new_tool_used = False
+
+            for call in steps:
+                name = call["name"]
+                args = call["arguments"]
+
+                signature = json.dumps(
+                    {
+                        "name": name,
+                        "arguments": args,
+                    },
+                    sort_keys=True,
+                    ensure_ascii=False,
+                )
+
+                if signature in executed:
+                    continue
+
+                executed.add(signature)
+
+                result = self.execute_tool(
+                    name,
+                    **args,
+                )
+
+                if name == "edit_file" and isinstance(result, dict):
+                    if result.get("status") == "pendiente_aprobacion":
+                        approved = self._apply_edit_result(result)
+
+                        result = {
+                            **result,
+                            "status": "actualizado" if approved else "descartado",
+                        }
+
+                context.append({
+                    "tool": name,
+                    "arguments": args,
+                    "result": result,
+                })
+
+                new_tool_used = True
+
+            if not new_tool_used:
+                break
 
 
         # Generar respuesta final
@@ -93,15 +156,16 @@ class Agent:
 
 
         # Guardar conversación
-        self.memory.add(
-            "user",
-            prompt
-        )
-
-        self.memory.add(
-            "assistant",
-            answer
-        )
+        self.memory.add_many([
+            {
+                "role": "user",
+                "content": prompt,
+            },
+            {
+                "role": "assistant",
+                "content": answer,
+            },
+        ])
 
 
         return answer
@@ -168,22 +232,28 @@ Tu tarea es modificar archivos correctamente.
         response = self.model.complete()
 
 
-        content = response.get(
-            "content",
-            ""
+        content = clean_code(
+            response.get(
+                "content",
+                ""
+            )
         )
 
+        if not content:
+            raise RuntimeError(
+                f"No se pudo generar contenido nuevo para {path}."
+            )
 
-        self.memory.add(
-            "user",
-            instruction
-        )
+        if content == text:
+            return {
+                "path": path,
+                "status": "sin_cambios",
+            }
 
-
-        self.memory.add(
-            "assistant",
-            content
-        )
-
-
-        return content
+        return {
+            "path": path,
+            "status": "pendiente_aprobacion",
+            "original": text,
+            "content": content,
+            "diff": DiffTool.diff(text, content),
+        }

@@ -1,58 +1,26 @@
 [
   {
-    "role": "user",
-    "content": "hola soy francisco"
+    "role": "system",
+    "content": "[RESUMEN_MEMORIA]\nConversación compactada: 1 mensajes (user=1, assistant=0, other=0).\nÚltimos puntos relevantes:\n- user: hola"
   },
   {
     "role": "assistant",
-    "content": "¡Hola, Francisco! ¿En qué puedo ayudarte? 😊"
+    "content": "¡Hola! ¿Cómo estás? ¿En qué puedo ayudarte? 😊"
   },
   {
     "role": "user",
-    "content": "sabes mi nombre?"
+    "content": "podes ver el proyecto que estoy haciendo?"
   },
   {
     "role": "assistant",
-    "content": "No, no tengo ese dato. ¿En qué puedo ayudarte? 😊"
+    "content": "¡Hola! Sí, puedo ver la estructura del proyecto que estás trabajando. Aquí tienes un resumen de los archivos y carpetas principales:\n\n```\nREADME.md\nmemory.json\npyproject.toml\nsrc/\n  iarg/\n    __init__.py\n    agent/\n      __init__.py\n      agent.py\n      planner.py\n      responder.py\n    commands.py\n    constants.py\n    main.py\n    memory/\n      __init__.py\n      memory.py\n    model.py\n    parser.py\n    prompts.py\n    tools/\n      __init__.py\n      base.py\n      diff.py\n      edit_file.py\n      files.py\n      find_files.py\n      glob.py\n      grep.py\n      proyect.py\n      read_file.py\n      read_files.py\n      registry.py\n      tree.py\n    ui/\n      __init__.py\n    utils.py\n```\n\n¿Querés que muestre más detalles de algún archivo en específico o necesitás ayuda con algo en particular? 😊"
   },
   {
     "role": "user",
-    "content": "sabes mi nombre?"
+    "content": "que me recomentarias implementar en mi proyecto"
   },
   {
     "role": "assistant",
-    "content": "No, no tengo ese dato guardado. ¿En qué puedo ayudarte, Francisco? 😊"
-  },
-  {
-    "role": "user",
-    "content": "no podes ver el historial"
-  },
-  {
-    "role": "assistant",
-    "content": "¡Disculpá! No tengo acceso al historial de conversaciones previas, pero puedo ayudarte con lo que necesites. ¿En qué puedo asistirte, Francisco? 😊"
-  },
-  {
-    "role": "user",
-    "content": "si tenes el historial si dijiste mi nombre jaja"
-  },
-  {
-    "role": "assistant",
-    "content": "¡Disculpá! No tengo acceso al historial de conversaciones previas, por lo que no puedo recordar si mencioné tu nombre antes. En este momento, no tengo ese dato guardado. ¿En qué puedo ayudarte, Francisco? 😊"
-  },
-  {
-    "role": "user",
-    "content": "cual es mi nombre"
-  },
-  {
-    "role": "assistant",
-    "content": "¡Claro que sí! Tu nombre es Francisco. 😊 ¿En qué puedo ayudarte?"
-  },
-  {
-    "role": "user",
-    "content": "quiero mejorar el proyecto que tengo en iarg"
-  },
-  {
-    "role": "assistant",
-    "content": "Your project structure looks well-organized with a clear separation of concerns. Here's a breakdown of the key components and how to work with them:\n\n---\n\n### **1. Project Structure Overview**\n```\n.\n├── .venv/              # Python virtual environment\n├── README.md           # Project documentation\n├── memory.json         # Persistent memory or configuration\n├── pyproject.toml      # Project configuration (dependencies, build settings)\n├── src/                # Main source code\n│   └── iarg/           # Core package\n│       ├── agent/      # AI agent logic\n│       ├── memory/     # Memory management\n│       ├── tools/      # Utility functions (e.g., file operations, grep)\n│       ├── utils/      # Helper functions\n│       └── main.py     # Entry point\n├── tests/              # Test files\n├── requirements.txt    # (Optional) List of dependencies\n└── setup.py            # (Optional) For packaging\n```\n\n---\n\n### **2. Key Files and Their Purposes**\n- **`pyproject.toml`**:  \n  Configure dependencies, build systems, and plugins (e.g., `typer` for CLI). Example:\n  ```toml\n  [tool.typer]\n  commands = [\"iarg\"]\n  ```\n- **`main.py`**:  \n  Entry point for the CLI (if using `typer`). Likely initializes the agent and tools.\n- **`agent/agent.py`**:  \n  Core logic for the AI agent (planning, response generation).\n- **`tools/`**:  \n  Utility scripts for file operations, searching, and system interactions (e.g., `grep.py`, `read_files.py`).\n- **`memory.json`**:  \n  Stores persistent memory or session data (e.g., chat history, state).\n\n---\n\n### **3. Running the Project**\n#### **Install Dependencies**\n```bash\npip install -r requirements.txt\n```\nor\n```bash\npip install -e .  # For editable install\n```\n\n#### **Run the CLI**\nIf using `typer`, run:\n```bash\niarg --help\n```\nCheck `src/iarg/main.py` for the CLI entry point.\n\n#### **Run Tests**\n```bash\npytest tests/\n```\n\n---\n\n### **4. Key Libraries and Features**\n- **`typer`**:  \n  Handles the CLI interface (e.g., `iarg` commands). Look for `@app.command()` decorators in `main.py`.\n- **`rich`**:  \n  Used for formatted terminal output (e.g., in `ui/` or `prompts.py`).\n- **`pydantic`**:  \n  Likely used for data validation in `model.py` or `tools/`.\n- **`shellingham`**:  \n  Cross-platform shell command execution (e.g., in `tools/proyect.py`).\n\n---\n\n### **5. Contributing and Debugging**\n- **Code Structure**:  \n  The modular design (`agent`, `tools`, `memory`) allows focused development. For example:\n  - Use `tools/grep.py` to search files.\n  - Use `agent/planner.py` to define task planning logic.\n- **Debugging**:  \n  Add `print()` statements or use `pdb` in `agent.py` or `tools/`.\n- **Documentation**:  \n  Update `README.md` with usage examples and feature descriptions.\n\n---\n\n### **6. Potential Improvements**\n- **Add `setup.py`**:  \n  For easier packaging and distribution.\n- **Improve CLI Help**:  \n  Expand `--help` with examples in `main.py`.\n- **Add Type Hints**:  \n  Use `typing_extensions` for advanced type annotations.\n\n---\n\n### **7. Example Workflow**\n1. **Install dependencies**:\n   ```bash\n   pip install -r requirements.txt\n   ```\n2. **Run the CLI**:\n   ```bash\n   iarg --help\n   ```\n3. **Test a tool**:\n   ```bash\n   iarg find_files \"pattern\"\n   ```\n4. **Debug the agent**:\n   ```bash\n   python src/iarg/agent/agent.py\n   ```\n\n---\n\nLet me know if you need help with specific files (e.g., `memory.json` structure, CLI command implementation, or tool integration)!"
+    "content": "¡Hola! Basado en la estructura de tu proyecto y en las herramientas que tienes (como `grep`, `find_files`, `read_files`, etc.), aquí tienes algunas ideas de implementaciones que podrían mejorar tu proyecto:\n\n### 1. **Mejorar la gestión de memoria**\n   - Implementar un sistema de memoria más avanzado que no solo almacene datos, sino que también:\n     - Priorice información relevante.\n     - Permite recuperar historiales de conversaciones anteriores.\n     - Integre contexto de múltiples sesiones.\n\n### 2. **Expandir las herramientas de búsqueda**\n   - Agregar soporte para búsquedas más complejas (ej.: buscar por patrones regulares, filtrar por fechas, etc.).\n   - Integrar `grep` con un sistema de resultados paginados o con capacidad de exportar resultados.\n\n### 3. **Interfaz de usuario (UI) más interactiva**\n   - Si no está ya implementada, crear una CLI más amigable con opciones de navegación, ayuda dinámica o soporte para comandos personalizados.\n   - O incluso un frontend web básico si el proyecto lo permite.\n\n### 4. **Soporte para múltiples formatos de archivo**\n   - Extender las herramientas `read_file`/`read_files` para manejar formatos como PDF, DOCX, imágenes, etc., usando librerías como `PyMuPDF` o `python-docx`.\n\n### 5. **Planner más inteligente**\n   - Mejorar el módulo `planner.py` para que priorice tareas según la complejidad, dependencias o tiempo estimado.\n\n### 6. **Logging y monitoreo**\n   - Implementar un sistema de logs que registre acciones clave (ej.: modificaciones de archivos, consultas a la memoria) para debugging o auditoría.\n\n### 7. **Integración con APIs externas**\n   - Si tu proyecto lo permite, agregar conectividad a APIs como GitHub, Google Drive, o servicios de IA (ej.: OpenAI, Google Gemini) para extender funcionalidades.\n\n¿Querés que profundice en alguna de estas ideas o necesitás ayuda para implementar algo específico? 😊"
   }
 ]
