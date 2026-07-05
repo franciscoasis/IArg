@@ -22,5 +22,29 @@
   {
     "role": "assistant",
     "content": "¡Hola! Basado en la estructura de tu proyecto y en las herramientas que tienes (como `grep`, `find_files`, `read_files`, etc.), aquí tienes algunas ideas de implementaciones que podrían mejorar tu proyecto:\n\n### 1. **Mejorar la gestión de memoria**\n   - Implementar un sistema de memoria más avanzado que no solo almacene datos, sino que también:\n     - Priorice información relevante.\n     - Permite recuperar historiales de conversaciones anteriores.\n     - Integre contexto de múltiples sesiones.\n\n### 2. **Expandir las herramientas de búsqueda**\n   - Agregar soporte para búsquedas más complejas (ej.: buscar por patrones regulares, filtrar por fechas, etc.).\n   - Integrar `grep` con un sistema de resultados paginados o con capacidad de exportar resultados.\n\n### 3. **Interfaz de usuario (UI) más interactiva**\n   - Si no está ya implementada, crear una CLI más amigable con opciones de navegación, ayuda dinámica o soporte para comandos personalizados.\n   - O incluso un frontend web básico si el proyecto lo permite.\n\n### 4. **Soporte para múltiples formatos de archivo**\n   - Extender las herramientas `read_file`/`read_files` para manejar formatos como PDF, DOCX, imágenes, etc., usando librerías como `PyMuPDF` o `python-docx`.\n\n### 5. **Planner más inteligente**\n   - Mejorar el módulo `planner.py` para que priorice tareas según la complejidad, dependencias o tiempo estimado.\n\n### 6. **Logging y monitoreo**\n   - Implementar un sistema de logs que registre acciones clave (ej.: modificaciones de archivos, consultas a la memoria) para debugging o auditoría.\n\n### 7. **Integración con APIs externas**\n   - Si tu proyecto lo permite, agregar conectividad a APIs como GitHub, Google Drive, o servicios de IA (ej.: OpenAI, Google Gemini) para extender funcionalidades.\n\n¿Querés que profundice en alguna de estas ideas o necesitás ayuda para implementar algo específico? 😊"
+  },
+  {
+    "role": "user",
+    "content": "hola"
+  },
+  {
+    "role": "assistant",
+    "content": "¡Hola! ¿Cómo estás? ¿Querés que te ayude con algo en particular o necesitás revisar algo del proyecto? 😊"
+  },
+  {
+    "role": "user",
+    "content": "hola como va a estar el clima hoy?"
+  },
+  {
+    "role": "assistant",
+    "content": "¡Hola! ¿Querés que te ayude con algo más? 😊  \nNo tengo acceso a datos en tiempo real como el clima, pero si necesitás ayuda con algo relacionado con tu proyecto o con herramientas que ya tengas, avísame. ¡Estoy aquí para ayudarte! 🌞"
+  },
+  {
+    "role": "user",
+    "content": "hola"
+  },
+  {
+    "role": "assistant",
+    "content": "¡Hola! ¿Cómo estás? ¿Querés que te ayude con algo en particular o necesitás revisar algo del proyecto? 😊"
   }
 ]

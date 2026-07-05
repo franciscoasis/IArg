@@ -33,13 +33,20 @@ class CommandHandler:
             return self.agent._read_file(path)
 
         if prompt.startswith("/edit "):
-            return self._edit(prompt.removeprefix("/edit "))
+            edit_payload = prompt.removeprefix("/edit ")
+
+            if "::" in edit_payload:
+                path, instruction = edit_payload.split("::", 1)
+                return self._edit(path.strip(), instruction.strip())
+
+            return self._edit(edit_payload)
 
         return None
 
-    def _edit(self, path: str):
+    def _edit(self, path: str, instruction: str | None = None):
 
-        instruction = input("¿Qué querés cambiar? ")
+        if instruction is None:
+            instruction = input("¿Qué querés cambiar? ")
 
         result = self.agent.edit_file(path, instruction)
 

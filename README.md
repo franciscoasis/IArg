@@ -4,23 +4,42 @@ IArg es un agente de IA local desarrollado en Python que utiliza modelos de leng
 
 ## Características
 
-- Agente conversacional local.
+- Agente conversacional local sin dependencias externas.
 - Arquitectura modular basada en herramientas.
-- Lectura y exploración de proyectos.
-- Manipulación de archivos.
+- Lectura, exploración y análisis de proyectos.
+- Manipulación y edición de archivos.
 - Planner para descomponer tareas complejas.
+- Sistema de memoria conversacional con compactación automática.
+- Herramientas avanzadas: grep con límites, tree, diff, find_files.
 - Fácil extensión mediante nuevas herramientas.
+- Optimización de latencia con truncado de contexto.
 
 ## Estructura del proyecto
 
 ```
-src/
-└── iarg/
-    ├── agent/
-    ├── model/
-    ├── planner/
-    ├── tools/
-    └── main.py
+src/iarg/
+├── agent/              # Lógica del agente
+│   ├── agent.py        # Orquestación principal
+│   ├── planner.py      # Descomposición de tareas
+│   └── responder.py    # Generación de respuestas
+├── memory/             # Sistema de memoria conversacional
+│   └── memory.py       # Gestión y compactación de memoria
+├── tools/              # Herramientas disponibles
+│   ├── base.py         # Clase base para herramientas
+│   ├── diff.py         # Comparación de archivos
+│   ├── edit_file.py    # Edición de archivos
+│   ├── find_files.py   # Búsqueda de archivos
+│   ├── grep.py         # Búsqueda en contenido (con límites)
+│   ├── read_file.py    # Lectura de archivos
+│   ├── tree.py         # Estructura de directorios
+│   └── registry.py     # Registro de herramientas
+├── ui/                 # Interfaz gráfica
+│   └── app.py          # Aplicación UI
+├── main.py             # Punto de entrada
+├── model.py            # Integración con Ollama
+├── parser.py           # Parseo de respuestas
+├── commands.py         # Comandos disponibles
+└── prompts.py          # Templates de prompts
 ```
 
 ## Requisitos
@@ -52,6 +71,12 @@ Iniciar el agente:
 PYTHONPATH=src uv run python -m iarg.main chat
 ```
 
+Iniciar la interfaz gráfica:
+
+```bash
+PYTHONPATH=src uv run python -m iarg.main gui
+```
+
 ## Arquitectura
 
 El agente sigue el siguiente flujo:
@@ -70,11 +95,15 @@ Las herramientas se encuentran en `src/iarg/tools` y pueden añadirse fácilment
 - [x] Integración con Ollama
 - [x] Herramientas para archivos
 - [x] Exploración de proyectos
-- [ ] Planner
-- [ ] Edición de archivos
-- [ ] Memoria de conversación
+- [x] Planner
+- [x] Edición de archivos
+- [x] Memoria de conversación
+- [x] Compactación automática de memoria
+- [x] Comandos de control (`/memory-stats`, `/memory-config`, `/memory-compact`)
 - [ ] Soporte para múltiples modelos
-- [ ] Tests
+- [ ] Tests unitarios
+- [ ] Persistencia mejorada
+- [ ] Integración con sistemas externos
 
 ## Tecnologías
 
